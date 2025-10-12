@@ -190,6 +190,10 @@ def train_and_eval(
     R_fit, M_fit = R_train, M_train
     R_target, M_target = R_test, M_test
 
+
+
+ 
+
     R_hat_base = baseline_sgd(R_fit, M_fit, lr=0.02, reg=0.02, epochs=n_iters, seed=seed)
     rmse_base = rmse_on(R_target, R_hat_base, M_target)
     print(f"[Baseline] RMSE on TEST = {rmse_base:.4f}")
