@@ -3,6 +3,8 @@ import numpy as np
 import os
 from tqdm import tqdm, trange
 import argparse
+from gnn import run
+
 def baseline_sgd(R, M, lr=0.02, reg=0.02, epochs=15, seed=42, shuffle=True):
     rng = np.random.default_rng(seed)
     U, I = R.shape
@@ -195,20 +197,20 @@ if __name__ == '__main__':
     
 
     # Any method you want
-    M_out = (~np.isnan(table)).astype(np.float32)
-    R_out = np.nan_to_num(table, nan=0.0).astype(np.float32)
-    R_hat_base = baseline_sgd(R_out, M_out, lr=0.01, reg=0.05, epochs=15, seed=42)
-    genres_np=np.load("namesngenre.npy")
-    X, feat_names = build_item_features(genres_np, M_out,
-                                    use_genre=True,
-                                    use_year=True,
-                                    use_log_count=True,
-                                    use_title_len=False)
+    # M_out = (~np.isnan(table)).astype(np.float32)
+    # R_out = np.nan_to_num(table, nan=0.0).astype(np.float32)
+    # R_hat_base = baseline_sgd(R_out, M_out, lr=0.01, reg=0.05, epochs=15, seed=42)
+    # genres_np=np.load("namesngenre.npy")
+    # X, feat_names = build_item_features(genres_np, M_out,
+    #                                 use_genre=True,
+    #                                 use_year=True,
+    #                                 use_log_count=True,
+    #                                 use_title_len=False)
     
-    item_adj, beta = ridge_item_residual_boost(R_out, M_out, R_hat_base, X, lam=1)
+    # item_adj, beta = ridge_item_residual_boost(R_out, M_out, R_hat_base, X, lam=1)
 
 
-    R_hat_final = R_hat_base + item_adj[None, :]
+    # R_hat_final = R_hat_base + item_adj[None, :]
 
     # R_hat_boost = item_knn_residual_boost(
     #     R=R_out,                 
@@ -217,10 +219,12 @@ if __name__ == '__main__':
     #     k=50,
     #     shrink=25,
     # )
-    completed = R_hat_final.copy()
-    obs = np.where(M_out > 0)
-    completed[obs] = R_out[obs]
-    table=completed
+    # completed = R_hat_final.copy()
+    # obs = np.where(M_out > 0)
+    # completed[obs] = R_out[obs]
+    # table=completed
+    
+    table = run(table)
 
 
     
