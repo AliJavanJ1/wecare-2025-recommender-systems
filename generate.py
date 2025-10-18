@@ -178,7 +178,7 @@ def build_item_features(
     X = np.concatenate([np.ones((I,1), dtype=np.float32), X], axis=1)
     feat_names = ["bias"] + feat_names
     return X, feat_names
-
+from neumf import  run_neumf
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a completed ratings table.')
     parser.add_argument("--name", type=str, default="ratings_eval.npy",
@@ -191,42 +191,35 @@ if __name__ == '__main__':
     # Open Ratings table
     print('Ratings loading...') 
     table = np.load(args.name) ## DO NOT CHANGE THIS LINE
-    print('Ratings Loaded.')
+    # print('Ratings Loaded.')
     
 
-    # Any method you want
-    M_out = (~np.isnan(table)).astype(np.float32)
-    R_out = np.nan_to_num(table, nan=0.0).astype(np.float32)
-    R_hat_base = baseline_sgd(R_out, M_out, lr=0.01, reg=0.05, epochs=15, seed=42)
-    genres_np=np.load("namesngenre.npy")
-    X, feat_names = build_item_features(genres_np, M_out,
-                                    use_genre=True,
-                                    use_year=True,
-                                    use_log_count=True,
-                                    use_title_len=False)
+    # # Any method you want
+    # M_out = (~np.isnan(table)).astype(np.float32)
+    # R_out = np.nan_to_num(table, nan=0.0).astype(np.float32)
+    # R_hat_base = baseline_sgd(R_out, M_out, lr=0.01, reg=0.05, epochs=15, seed=42)
+    # genres_np=np.load("namesngenre.npy")
+    # X, feat_names = build_item_features(genres_np, M_out,
+    #                                 use_genre=True,
+    #                                 use_year=True,
+    #                                 use_log_count=True,
+    #                                 use_title_len=False)
     
-    item_adj, beta = ridge_item_residual_boost(R_out, M_out, R_hat_base, X, lam=1)
+    # item_adj, beta = ridge_item_residual_boost(R_out, M_out, R_hat_base, X, lam=1)
 
 
-    R_hat_final = R_hat_base + item_adj[None, :]
+    # R_hat_final = R_hat_base + item_adj[None, :]
 
-    # R_hat_boost = item_knn_residual_boost(
-    #     R=R_out,                 
-    #     M_train=M_out,         
-    #     pred_bias=R_hat_fit,
-    #     k=50,
-    #     shrink=25,
-    # )
-    completed = R_hat_final.copy()
-    obs = np.where(M_out > 0)
-    completed[obs] = R_out[obs]
-    table=completed
+    # completed = R_hat_final.copy()
+    # obs = np.where(M_out > 0)
+    # completed[obs] = R_out[obs]
+    # table=completed
 
-
+    output=run_neumf(table)
     
 
     # Save the completed table 
-    np.save("output.npy", table) ## DO NOT CHANGE THIS LINE
+    np.save("output.npy", output) ## DO NOT CHANGE THIS LINE
 
 
         
