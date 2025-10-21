@@ -4,3 +4,6 @@ scipy
 tqdm==4.66.1
 torch
 torch_geometric
+ipykernel
+lightning[extra]
+pandas
