@@ -1,0 +1,14 @@
+test.ipynb
+.python-version
+uv.lock
+pyproject.toml
+.venv
+test.py
+ratings_test.npy
+ratings_train.npy
+**/__pycache__/
+output.npy
+gnn/
+lightning_logs/
+test2.ipynb
+dmf/
